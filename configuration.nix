@@ -25,10 +25,22 @@ in
   ];
 
   boot.kernelPackages = latestKernelPackage;
-  nix.settings.experimental-features = [
-    "nix-command"
-    "flakes"
-  ];
+  nix = {
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+
+      trusted-users = [
+        "root"
+        "user"
+      ];
+      auto-optimise-store = true;
+      max-jobs = "auto";
+      cores = 8;
+    };
+  };
   nixpkgs.config.allowUnfree = true;
   hardware.bluetooth = {
     enable = true;
@@ -97,12 +109,16 @@ in
 
   systemd.services.zfs-mount.enable = false;
 
+  virtualisation.docker.enable = true;
+
   networking = {
     hostName = "emperor";
     networkmanager.enable = true;
     hostId = "1023e441";
     firewall.enable = false;
   };
+
+  programs.wireshark.enable = true;
 
   time.timeZone = "Europe/Dublin";
 
@@ -152,7 +168,10 @@ in
 
   users.users.user = {
     isNormalUser = true;
-    extraGroups = [ "wheel" ];
+    extraGroups = [
+      "wheel"
+      "wireshark"
+    ];
     packages = with pkgs; [
       tree
     ];
@@ -183,6 +202,8 @@ in
       mc
       curl
       imhex
+      kubernetes-helm
+      llvm_20
       unzip
       nil
       nixd
@@ -192,6 +213,40 @@ in
       iftop
       cpufrequtils
       powertop
+      pciutils
+      usbutils
+      mesa-demos
+      vulkan-tools
+      nmap
+      rustup
+      protobuf
+      terraform
+      awscli2
+      bind.dnsutils
+      file
+      github-cli
+      gcc
+      strace
+      mold
+      (python3.withPackages (
+        p: with p; [
+          ipython
+          numpy
+          requests
+          tqdm
+        ]
+      ))
+      wget
+      whois
+      go_1_24
+      ungoogled-chromium
+      cachix
+      cargo-expand
+      cargo-outdated
+      cargo-nextest
+      clang-tools
+      cmake
+      ffmpeg-full
       lm_sensors
       smartmontools
       tailscale
@@ -200,6 +255,12 @@ in
       libreoffice-fresh
       jetbrains-toolbox
       zed-editor
+
+      # jetbrains.pycharm-professional
+      jetbrains.rust-rover
+      # jetbrains.datagrip
+      # jetbrains.idea-ultimate
+
       thunderbird
     ])
     (with pkgs.kdePackages; [
@@ -214,7 +275,25 @@ in
       kolourpaint
       kdeconnect-kde
     ])
+    [ config.boot.kernelPackages.perf ]
   ];
+
+  fonts.packages = with pkgs; [
+    nerd-fonts.fira-code
+    nerd-fonts.jetbrains-mono
+    (google-fonts.override { fonts = [ "Poppins" ]; })
+    jetbrains-mono
+    fira-code
+    fira-code-symbols
+    dosis
+    iosevka
+  ];
+
+  environment.sessionVariables = {
+    KWIN_DRM_NO_AMS = "1"; # work around DCN bug
+    # optional fine-tuning if you still see artefacts
+    # KWIN_DRM_USE_MODIFIERS = "0";
+  };
 
   system.stateVersion = "25.05";
 }
