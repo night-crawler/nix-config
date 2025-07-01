@@ -17,6 +17,9 @@ let
       builtins.attrValues zfsCompatibleKernelPackages
     )
   );
+
+  # clionWithCopilot = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.clion [ "github-copilot" ];
+  # roverWithCopilot = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.rust-rover [ "github-copilot" ];
 in
 {
   imports = [
@@ -165,6 +168,7 @@ in
     # 2775  = rwx for owner+group, set-gid so new files inherit ‘users’
     "d /work 2775 user users - -"
   ];
+  programs.zsh.enable = true;
 
   users.users.user = {
     isNormalUser = true;
@@ -175,8 +179,11 @@ in
     packages = with pkgs; [
       tree
     ];
-    hashedPassword = "$6$vyuDcMFaLlhHg1Rg$v68/8eVYIQwnSkfXz/cGgGdVHljl0V82CjCcOS8nMwg6EwYXho53M8HvPeaAuUDHFIZ1dbtViOl58y1p4iou30";
+    initialPassword = "initial";
+    shell = pkgs.zsh;
   };
+
+  users.defaultUserShell = pkgs.zsh;
 
   programs.firefox.enable = true;
 
@@ -193,6 +200,15 @@ in
 
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
+      comma
+      delta
+      dua
+      dust
+      fd
+      glow
+      tokei
+      pavucontrol
+      home-manager
       gajim
       telegram-desktop
       ripgrep
@@ -257,9 +273,11 @@ in
       zed-editor
 
       # jetbrains.pycharm-professional
-      jetbrains.rust-rover
-      # jetbrains.datagrip
+      # roverWithCopilot
+      # clionWithCopilot
       # jetbrains.idea-ultimate
+
+      jetbrains-toolbox
 
       thunderbird
     ])

@@ -15,6 +15,9 @@
       home-manager,
       ...
     }:
+    let
+      system = "x86_64-linux";
+    in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         modules = [
@@ -25,8 +28,14 @@
             ];
           }
           ./configuration.nix
+          home-manager.nixosModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+
+            home-manager.users.user = import ./home/default.nix;
+          }
         ];
       };
-
     };
 }
