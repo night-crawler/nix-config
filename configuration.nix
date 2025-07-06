@@ -241,6 +241,12 @@ in
       bind.dnsutils
       file
       github-cli
+      pkg-config
+      udev
+      direnv
+      hyperfine
+      nfs-utils
+      coreutils
       gcc
       strace
       mold

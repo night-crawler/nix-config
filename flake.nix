@@ -6,6 +6,8 @@
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    led-matrix-daemon.url = "github:night-crawler/led_matrix_daemon";
+    led-matrix-monitoring.url = "github:night-crawler/led_matrix_monitoring";
   };
   outputs =
     inputs@{
@@ -13,6 +15,8 @@
       nixpkgs,
       nixos-hardware,
       home-manager,
+      led-matrix-daemon,
+      led-matrix-monitoring,
       ...
     }:
     let
@@ -28,6 +32,23 @@
             ];
           }
           ./configuration.nix
+
+          led-matrix-daemon.nixosModules.default
+          {
+            services.led-matrix-daemon = {
+              enable = true;
+              # configFile = ./led_matrix_daemon.toml;
+              # package = inputs.led-matrix-daemon.packages.${system}.default;
+            };
+          }
+
+          led-matrix-monitoring.nixosModules.default
+          {
+            services.led-matrix-monitoring = {
+              enable = true;
+            };
+          }
+
           home-manager.nixosModules.home-manager
           {
             home-manager.useGlobalPkgs = true;
