@@ -40,12 +40,29 @@
               # configFile = ./led_matrix_daemon.toml;
               # package = inputs.led-matrix-daemon.packages.${system}.default;
             };
+
+            systemd.services."led-matrix-daemon".serviceConfig = {
+              Environment = "RUST_BACKTRACE=full";
+            };
           }
 
           led-matrix-monitoring.nixosModules.default
           {
             services.led-matrix-monitoring = {
               enable = true;
+              settings = {
+                network_interfaces = [
+                  {
+                    Name = {
+                      Equal = "wlp2s0";
+                    };
+                  }
+                ];
+
+                render = {
+                  max_brightness = 100;
+                };
+              };
             };
           }
 

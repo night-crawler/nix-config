@@ -44,7 +44,11 @@ in
       cores = 8;
     };
   };
-  nixpkgs.config.allowUnfree = true;
+  nixpkgs = {
+    config.allowUnfree = true;
+    # overlays = [ (import ../overlays) ];
+  };
+
   hardware.bluetooth = {
     enable = true;
     powerOnBoot = true;
@@ -175,6 +179,7 @@ in
     extraGroups = [
       "wheel"
       "wireshark"
+      "docker"
     ];
     packages = with pkgs; [
       tree
@@ -276,7 +281,7 @@ in
       haruna
       libreoffice-fresh
       jetbrains-toolbox
-      zed-editor
+      # zed-editor-fhs
 
       # jetbrains.pycharm-professional
       # roverWithCopilot

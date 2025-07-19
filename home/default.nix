@@ -17,11 +17,33 @@ in
 
   home.packages = with pkgs; [
     neofetch
+    uv
     jq
     starship
     zsh-autosuggestions
     zsh-syntax-highlighting
     zsh-completions
+    bpf-linker
+    zed-editor.fhs
+
+    # Essential libraries for building Python itself
+    zlib
+    bzip2
+    xz
+    openssl
+    sqlite
+    readline
+    libffi
+    ncurses
+    tk
+    libuuid
+
+    # Common libraries for popular Python packages (e.g., Pillow)
+    libjpeg
+    libpng
+    libwebp
+    libxml2
+    libxslt
   ];
 
   programs.zsh = {
