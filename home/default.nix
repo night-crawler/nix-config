@@ -24,7 +24,7 @@ in
     zsh-syntax-highlighting
     zsh-completions
     bpf-linker
-    zed-editor.fhs
+    # zed-editor
 
     # Essential libraries for building Python itself
     zlib
@@ -44,6 +44,19 @@ in
     libwebp
     libxml2
     libxslt
+
+    # video
+    ffmpeg-full
+    gst_all_1.gstreamer
+    gst_all_1.gst-vaapi
+    gst_all_1.gst-plugins-ugly
+    gst_all_1.gst-plugins-rs
+    gst_all_1.gst-plugins-good
+    gst_all_1.gst-plugins-base
+    gst_all_1.gst-plugins-bad
+
+    s-tui
+    orca-slicer
   ];
 
   programs.zsh = {
@@ -110,5 +123,19 @@ in
     enable = true;
     enableZshIntegration = true;
     icons = "auto";
+  };
+
+  programs.zed-editor = {
+    enable = true;
+
+    extensions = [
+      "nix"
+      "toml"
+      "lua"
+      "basher"
+      "dracula"
+    ];
+
+    extraPackages = [ pkgs.nixd ];
   };
 }

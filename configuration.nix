@@ -47,6 +47,10 @@ in
   nixpkgs = {
     config.allowUnfree = true;
     # overlays = [ (import ../overlays) ];
+    config.permittedInsecurePackages = [
+      "libsoup-2.74.3"
+    ];
+
   };
 
   hardware.bluetooth = {
@@ -97,13 +101,56 @@ in
     trim.enable = true;
   };
 
-  services.tlp.enable = true;
+  services.tlp.enable = false;
+  # services.power-profiles-daemon.enable = false;
+
   services.power-profiles-daemon.enable = false;
+  services.auto-cpufreq = {
+    enable = true;
+    settings = {
+      battery = {
+        governor = "ondemand";
+        turbo = "auto";
+      };
+      charger = {
+        governor = "ondemand";
+        turbo = "auto";
+      };
+    };
+  };
 
   boot.kernelParams = [
-    "zfs.zfs_arc_max=12884901888"
+    # "zfs.zfs_arc_max=12884901888"
     "mitigations=off"
   ];
+
+  boot.kernel.sysctl = {
+    "vm.swappiness" = 120;
+    "vm.page-cluster" = 0;
+
+    "vm.dirty_background_bytes" = 1073741824;
+    "vm.dirty_bytes" = 4294967296;
+    "vm.dirty_expire_centisecs" = 12000;
+    "vm.dirty_writeback_centisecs" = 3000;
+
+    "vm.vfs_cache_pressure" = 50;
+  };
+
+  boot.extraModprobeConfig = ''
+    options zfs zfs_arc_max=34359738368 # 32G
+    options zfs zfs_dirty_data_max=4294967296
+    options zfs zfs_dirty_data_max_max=8589934592
+    options zfs zfs_txg_timeout=60
+  '';
+
+  zramSwap = {
+    enable = true;
+    priority = 100;
+    memoryPercent = 50;
+    algorithm = "zstd";
+  };
+
+  services.journald.extraConfig = "Storage=volatile";
 
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
@@ -281,15 +328,6 @@ in
       haruna
       libreoffice-fresh
       jetbrains-toolbox
-      # zed-editor-fhs
-
-      # jetbrains.pycharm-professional
-      # roverWithCopilot
-      # clionWithCopilot
-      # jetbrains.idea-ultimate
-
-      jetbrains-toolbox
-
       thunderbird
     ])
     (with pkgs.kdePackages; [

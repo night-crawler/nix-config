@@ -23,6 +23,13 @@
       system = "x86_64-linux";
     in
     {
+      nixosConfigurations.emperor = nixpkgs.lib.nixosSystem {
+        system = "x86_64-linux";
+        modules = [
+          ./hosts/emperor.nix
+        ];
+      };
+
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         modules = [
           nixos-hardware.nixosModules.framework-16-7040-amd
