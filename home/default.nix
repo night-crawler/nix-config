@@ -129,14 +129,6 @@ in
   programs.zed-editor = {
     enable = true;
 
-    extensions = [
-      "nix"
-      "toml"
-      "lua"
-      "basher"
-      "dracula"
-    ];
-
     extraPackages = with pkgs; [
       git
       cacert
@@ -164,5 +156,37 @@ in
     ];
   };
 
+  programs.zed-editor-extensions = {
+    enable = true;
+    packages = with pkgs.zed-extensions; [
+      nix
+      toml
+      lua
+      basher
+      dracula
+      python-refactoring
+      python-requirements
+      python-snippets
+      pylsp
+      ruff
+      react-typescript-snippets
+      react-snippets
+      react-type-kit-snippets
+      javascript-snippets
+      go-snippets
+      terraform
+      mustache
+      intellij-newui-theme
+      jetbrains-new-ui-icons
+      sql
+      rst
+      graphql
+      graphviz
+      gitignore-templates
+      gcode
+      awk
+      zig
+    ];
+  };
 
 }

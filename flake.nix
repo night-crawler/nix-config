@@ -19,6 +19,7 @@
     , home-manager
     , led-matrix-daemon
     , led-matrix-monitoring
+    , zed-extensions
     , ...
     }:
     let
@@ -27,6 +28,12 @@
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         modules = [
+          # Apply zed-extensions overlay
+          {
+            nixpkgs.overlays = [
+              zed-extensions.overlays.default
+            ];
+          }
           nixos-hardware.nixosModules.framework-16-7040-amd
           {
             boot.kernelParams = [
@@ -72,6 +79,11 @@
           {
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
+
+            # Add zed-extensions Home Manager module
+            home-manager.sharedModules = [
+              zed-extensions.homeManagerModules.default
+            ];
 
             home-manager.users.user = import ./home/default.nix;
           }
