@@ -8,16 +8,18 @@
     };
     led-matrix-daemon.url = "github:night-crawler/led_matrix_daemon";
     led-matrix-monitoring.url = "github:night-crawler/led_matrix_monitoring";
+    zed-extensions = {
+      url = "github:DuskSystems/nix-zed-extensions";
+    };
   };
   outputs =
-    inputs@{
-      self,
-      nixpkgs,
-      nixos-hardware,
-      home-manager,
-      led-matrix-daemon,
-      led-matrix-monitoring,
-      ...
+    inputs@{ self
+    , nixpkgs
+    , nixos-hardware
+    , home-manager
+    , led-matrix-daemon
+    , led-matrix-monitoring
+    , ...
     }:
     let
       system = "x86_64-linux";

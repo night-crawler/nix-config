@@ -7,10 +7,11 @@ in
   home.stateVersion = "25.05";
   programs.git = {
     enable = true;
-    userName = "night-crawler";
-    userEmail = "lilo.panic@gmail.com";
-
-    extraConfig = {
+    settings = {
+      user = {
+        name = "night-crawler";
+        email = "lilo.panic@gmail.com";
+      };
       sequence.editor = "${exe pkgs.git-interactive-rebase-tool}";
     };
   };
@@ -136,6 +137,32 @@ in
       "dracula"
     ];
 
-    extraPackages = [ pkgs.nixd ];
+    extraPackages = with pkgs; [
+      git
+      cacert
+      nixd
+      nil
+      nixpkgs-fmt
+      rust-analyzer
+      rustfmt
+      clippy
+      pyright
+      black
+      ruff
+      nodePackages.typescript
+      nodePackages.typescript-language-server
+      nodePackages.prettier
+      gopls
+      gofumpt
+      lua-language-server
+      bash-language-server
+      shellcheck
+      shfmt
+      yaml-language-server
+      terraform-ls
+      tree-sitter
+    ];
   };
+
+
 }

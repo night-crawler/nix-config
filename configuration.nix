@@ -1,16 +1,17 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
+{ config
+, lib
+, pkgs
+, ...
 }:
 let
-  zfsCompatibleKernelPackages = lib.filterAttrs (
-    name: kp:
-    (builtins.match "linux_[0-9]+_[0-9]+" name) != null
-    && (builtins.tryEval kp).success
-    && (!kp.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-  ) pkgs.linuxKernel.packages;
+  zfsCompatibleKernelPackages = lib.filterAttrs
+    (
+      name: kp:
+        (builtins.match "linux_[0-9]+_[0-9]+" name) != null
+        && (builtins.tryEval kp).success
+        && (!kp.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
+    )
+    pkgs.linuxKernel.packages;
 
   latestKernelPackage = lib.last (
     lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (
@@ -246,7 +247,19 @@ in
     enable = true;
     enableSSHSupport = true;
   };
-  programs.nix-ld.enable = true;
+  programs.nix-ld = {
+    enable = true;
+    libraries = with pkgs; [
+      stdenv.cc.cc
+      zlib
+      zstd
+      bzip2
+      xz
+      openssl
+      icu
+      libffi
+    ];
+  };
 
   services.openssh.enable = true;
   services.tailscale.enable = true;
@@ -310,18 +323,36 @@ in
           numpy
           requests
           tqdm
+          python-lsp-server
+          black
+          ruff
         ]
       ))
       wget
       whois
       go_1_24
+      gopls
+      gofumpt
       ungoogled-chromium
       cachix
+      yaml-language-server
       cargo-expand
       cargo-outdated
       cargo-nextest
+      rustfmt
+      clippy
+      rust-analyzer
       clang-tools
       cmake
+      terraform-ls
+      nodePackages.typescript
+      nodePackages.typescript-language-server
+      nodePackages.prettier
+      lua-language-server
+      bash-language-server
+      shellcheck
+      shfmt
+      pyright
       ffmpeg-full
       lm_sensors
       smartmontools
