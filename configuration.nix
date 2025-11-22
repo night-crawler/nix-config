@@ -1,6 +1,7 @@
 { config
 , lib
 , pkgs
+, inputs
 , ...
 }:
 let
@@ -284,7 +285,7 @@ in
       wget
       mc
       curl
-      imhex
+      # imhex
       kubernetes-helm
       llvm_20
       unzip
