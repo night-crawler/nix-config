@@ -1,6 +1,7 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    chaotic.url = "github:chaotic-cx/nyx/nyxpkgs-unstable";
     nixos-hardware.url = "github:nixos/nixos-hardware";
     home-manager = {
       url = "github:nix-community/home-manager";
@@ -20,6 +21,7 @@
     , led-matrix-daemon
     , led-matrix-monitoring
     , zed-extensions
+    , chaotic
     , ...
     }:
     let
@@ -28,6 +30,7 @@
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         modules = [
+          chaotic.nixosModules.default
           # Apply zed-extensions overlay
           {
             nixpkgs.overlays = [

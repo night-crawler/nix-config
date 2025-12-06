@@ -4,32 +4,16 @@
 , inputs
 , ...
 }:
-let
-  zfsCompatibleKernelPackages = lib.filterAttrs
-    (
-      name: kp:
-        (builtins.match "linux_[0-9]+_[0-9]+" name) != null
-        && (builtins.tryEval kp).success
-        && (!kp.${config.boot.zfs.package.kernelModuleAttribute}.meta.broken)
-    )
-    pkgs.linuxKernel.packages;
 
-  latestKernelPackage = lib.last (
-    lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (
-      builtins.attrValues zfsCompatibleKernelPackages
-    )
-  );
-
-  # clionWithCopilot = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.clion [ "github-copilot" ];
-  # roverWithCopilot = pkgs.jetbrains.plugins.addPlugins pkgs.jetbrains.rust-rover [ "github-copilot" ];
-in
 {
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
   ];
 
-  boot.kernelPackages = latestKernelPackage;
+  boot.kernelPackages = pkgs.linuxPackages_cachyos.cachyOverride {
+    mArch = "ZEN4";
+  };
   nix = {
     settings = {
       experimental-features = [
@@ -43,7 +27,7 @@ in
       ];
       auto-optimise-store = true;
       max-jobs = "auto";
-      cores = 8;
+      cores = 16;
     };
   };
   nixpkgs = {
@@ -53,6 +37,15 @@ in
       "libsoup-2.74.3"
     ];
 
+    # overlays = [
+    #   (final: prev: {
+    #     inherit (prev.pkgsx86_64_v4)
+    #       mesa
+    #       ffmpeg
+    #       # Add more packages as needed
+    #       ;
+    #   })
+    # ];
   };
 
   hardware.bluetooth = {
@@ -159,6 +152,7 @@ in
   boot.loader.efi.canTouchEfiVariables = true;
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs = {
+    package = pkgs.zfs_cachyos;
     devNodes = "/dev/disk/by-id";
     extraPools = [ "penguins" ];
   };
