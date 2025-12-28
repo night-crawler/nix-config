@@ -343,6 +343,9 @@
       nodePackages.typescript
       nodePackages.typescript-language-server
       nodePackages.prettier
+      nodejs
+      gnumake
+      pnpm
       lua-language-server
       bash-language-server
       shellcheck
@@ -357,6 +360,7 @@
       libreoffice-fresh
       jetbrains-toolbox
       thunderbird
+      slack
     ])
     (with pkgs.kdePackages; [
       konsole

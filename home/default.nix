@@ -5,6 +5,11 @@ let
 in
 {
   home.stateVersion = "25.05";
+
+  home.sessionPath = [
+    "$HOME/.cargo/bin"
+  ];
+
   programs.git = {
     enable = true;
     settings = {
@@ -168,7 +173,7 @@ in
       python-requirements
       python-snippets
       pylsp
-      ruff
+      # ruff
       react-typescript-snippets
       react-snippets
       react-type-kit-snippets
