@@ -300,7 +300,11 @@
       protobuf
       terraform
       awscli2
+      postgresql
+      mysql80
+      clickhouse
       bind.dnsutils
+      dos2unix
       file
       github-cli
       pkg-config
@@ -327,6 +331,9 @@
       whois
       go_1_24
       gopls
+      dotnet-sdk_8
+      msbuild
+      mono
       gofumpt
       ungoogled-chromium
       cachix
