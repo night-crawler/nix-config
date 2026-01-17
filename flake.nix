@@ -63,18 +63,23 @@
             services.led-matrix-monitoring = {
               enable = true;
               settings = {
-                network_interfaces = [
-                  {
-                    Name = {
-                      Equal = "wlp2s0";
-                    };
-                  }
-                ];
-
-                render = {
-                  max_brightness = 100;
+                collector = {
+                  network_interfaces = [
+                    {
+                      Name = {
+                        Equal = "wlp2s0";
+                      };
+                    }
+                  ];
                 };
               };
+            };
+
+            systemd.services.led-matrix-monitoring = {
+              preStart = ''
+                mkdir -p /etc/led_matrix
+                echo -n "99" > /etc/led_matrix/max_brightness_value
+              '';
             };
           }
 
