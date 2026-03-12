@@ -31,11 +31,14 @@
     };
   };
   nixpkgs = {
-    config.allowUnfree = true;
+    config = {
+      allowUnfree = true;
+      permittedInsecurePackages = [
+        "libsoup-2.74.3"
+      ];
+      replaceStdenv = { pkgs }: pkgs.stdenv;
+    };
     # overlays = [ (import ../overlays) ];
-    config.permittedInsecurePackages = [
-      "libsoup-2.74.3"
-    ];
 
     # overlays = [
     #   (final: prev: {
@@ -375,6 +378,7 @@
 
   environment.systemPackages = lib.mkMerge [
     (with pkgs; [
+      subdl
       comma
       delta
       dua
