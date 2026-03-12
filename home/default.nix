@@ -22,7 +22,7 @@ in
   };
 
   home.packages = with pkgs; [
-    neofetch
+    fastfetch
     uv
     jq
     starship
